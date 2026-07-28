@@ -26,6 +26,22 @@ Format : date — décision — motif/source. Les points de vigilance associés 
   (Python, walkthrough complet, pas de licence → V11).
 - Registre de vigilance créé (V1-V13) avec déclencheur par phase : rien ne se ressort « de mémoire », tout est tracé.
 
+## 2026-07-28 (exécution Phase 0)
+
+- **Fiches de lecture produites** : `docs/FICHE_SANTOS_AAAI24.md` et `docs/FICHE_KAYAALP_SAYED_2023.md`
+  (version lue : v2/JMLR 27:1-54, 2026 — à citer ainsi auprès de Mert). Audit code : `docs/AUDIT_CODE_SANTOS.md`.
+- **V7 résolu sur le principe** : à A donnée, C(m→k) ne demande que H=2, dose uniforme, un scalaire
+  d'informativité d̄>0 (homogénéité — l'ordre des influences n'en dépend pas) + (δ, β=1) en ASL.
+  d estimable via l'intercept du VAR ou GCL éq. (82). Valeurs à trancher en Phase 3.
+- **Variante retenue de fait : ASL** (V16) — NBSL est non-stationnaire, incompatible avec un fit VAR sur séries
+  standardisées. NBSL reste la limite δ→0 pour les formules.
+- **Code des auteurs : ré-implémentation from scratch, zéro vendoring** (V11 statué, V20-V21) — le code publié
+  est un tutoriel buggé sur le cas dirigé, sans licence ; nos briques seront réécrites et testées (orientation
+  des flèches vérifiée par test unitaire, V17).
+- **Découverte structurante** (fiche K&S §4) : le pipeline du papier de Mert sépare déjà « A d'une source
+  externe » (éq. 81, adjacence Twitter) et « d estimé des résidus » (éq. 82). Notre substitution
+  (AAAI'24 → A) remplace l'éq. (81) et conserve l'éq. (82) : **argument de cohérence fort pour la note à Mert**.
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).
