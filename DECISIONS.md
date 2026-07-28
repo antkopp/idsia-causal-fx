@@ -42,6 +42,10 @@ Format : date — décision — motif/source. Les points de vigilance associés 
   externe » (éq. 81, adjacence Twitter) et « d estimé des résidus » (éq. 82). Notre substitution
   (AAAI'24 → A) remplace l'éq. (81) et conserve l'éq. (82) : **argument de cohérence fort pour la note à Mert**.
 
+- **Jalon bloquant ajouté (demande du 28/07)** : revue exhaustive finale de toutes les hypothèses de toutes
+  les méthodes du pipeline tel que construit (PLAN §5.0, V23, futur `docs/HYPOTHESES.md`). Verdict tripartite
+  par hypothèse ; alimentée en continu à chaque méthode adoptée ; conditionne la note à Mert ET la Phase 6.
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).

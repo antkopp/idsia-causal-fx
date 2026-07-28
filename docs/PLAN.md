@@ -59,9 +59,20 @@ Les deux étapes scientifiques successives (validées) :
 - **Sanity check devises mineures** : une mineure qui « cause » l'USD = signal d'erreur (Mert 17/07).
 - Robustesse fenêtre/fréquence ; stabilité temporelle (rolling) ; sensibilité aux confondants.
 
-## Phase 5 — Livrables recherche
+## Phase 5 — Revue des hypothèses (bloquante) + livrables recherche
 
-- Note de résultats pour Mert : graphe estimé, poids, CausalRank, sensibilité à l'horizon, sanity checks.
+- **5.0 Revue exhaustive des hypothèses — jalon bloquant.** Consolider dans `docs/HYPOTHESES.md` la matrice
+  complète de TOUTES les hypothèses de TOUTES les méthodes du pipeline tel que construit (pas les papiers en
+  abstrait) : AAAI'24 (linéarité, stabilité ρ(A)<1, symétrie des théorèmes, A non négative, homogénéité
+  nodewise, distinguabilité, bruit i.i.d. temporel, condition (12), budget d'échantillons), Kayaalp & Sayed
+  (signaux i.i.d., forte connexité + self-loops, A left-stochastic, θ° stationnaire, H, d̄>0, δ/β),
+  construction des données (NEER : pondérations, stationnarisation, standardisation), estimation (VAR/1B,
+  régularisations, fenêtres), et méthodes ajoutées en cours de route. Pour chaque hypothèse : satisfaite
+  (preuve/test à l'appui) / violée mais justifiée (argument écrit + test de sensibilité) / violée sans parade
+  (limite déclarée). Les tableaux « hypothèses » des fiches de lecture sont le point de départ ; la matrice
+  finale doit refléter le système réel. **Aucune note à Mert ni backtest Phase 6 ne part sans cette revue.**
+- Note de résultats pour Mert : graphe estimé, poids, CausalRank, sensibilité à l'horizon, sanity checks —
+  avec la section limites tirée de 5.0.
 - Proposition de réunion (engagement email 17/07 : « looking forward to hearing results »).
 
 ## Phase 6 — Portefeuille & backtest (dernière phase)
