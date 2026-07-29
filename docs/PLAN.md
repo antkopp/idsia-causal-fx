@@ -29,13 +29,16 @@ Les deux étapes scientifiques successives (validées) :
 
 ## Phase 1 — Données & ETL (Supabase, accès partagé à Mert)
 
-- Univers : devises flottantes majeures + **mineures pour le sanity check** (conseil Mert 17/07).
-- Source EODHD ; construction de la **série de force par devise** (type NEER : agrégation des cotes bilatérales,
-  choix des pondérations à documenter).
-- Stationnarisation (log-niveaux vs log-rendements — l'algorithme suppose des données d'équilibre) ;
-  standardisation des variances (hypothèse d'homogénéité nodewise).
-- Fréquence et historique : tension budget d'échantillons (V3) — journalier ~7 800 points/30 ans vs intraday.
-- ETL + partage d'accès Supabase à Mert (engagement email 14/07).
+**Spécification détaillée : [PLAN_PHASE1.md](PLAN_PHASE1.md).** Résumé :
+- 1.1 Univers : 10 majeures G10 + 6 mineures flottantes (MXN, ZAR, PLN, HUF, CZK, ILS) = K=16 nœuds.
+- 1.2 Cotations : 15 paires USD EODHD, triangulation par pivot USD ; sonde de disponibilité t0 par paire (V25).
+- 1.3 Granularité : ingestion 1m depuis 2009 (~4 000 crédits one-shot), agrégation 15m/1h ;
+  1h ⇒ ~105k échantillons = l'échelle du papier (résout V3).
+- 1.4 Série de force : NEER log, poids BIS (asymétriques — évite la singularité V24), Δs standardisé par
+  vol glissante (V2) ; ne pas écraser l'intercept (V18).
+- 1.5 Panel synchrone UTC 24/5, règles de trous journalisées.
+- 1.6 Stockage : 1m brut → R2 parquet ; agrégats + force → Supabase (`fx_bars_*`, `fx_strength`) ;
+  ETL dans swiss-wealth-etl (probe/backfill/cron) ; rôle lecture seule pour Mert (V12).
 
 ## Phase 2 — Identification de A (Santos et al.)
 
