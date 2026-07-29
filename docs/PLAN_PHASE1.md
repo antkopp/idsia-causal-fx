@@ -9,13 +9,23 @@ avec assez d'échantillons (V3), stocké et partageable avec Mert (V12). Six ét
 
 **Nœuds = devises (pas les paires)** — décision actée 14/07.
 
-- **Majeures (10, G10)** : USD, EUR, JPY, GBP, CHF, AUD, NZD, CAD, SEK, NOK.
-- **Mineures flottantes pour le sanity check V8 (6)** : MXN, ZAR, PLN, HUF, CZK, ILS —
-  flotteurs propres et liquides, sans contrôle de capitaux notable.
+Univers en **trois étages** (le 3ᵉ vient du mail de Mert du 17/07 : « if data permits, putting other
+currencies can also be a check […] if the algorithm discovers that some random currency "affecting" USD →
+that is a sign for us that somethings are going wrong ») :
+
+- **Étage 1 — Majeures (10, G10)** : USD, EUR, JPY, GBP, CHF, AUD, NZD, CAD, SEK, NOK. Le cœur de l'étude.
+- **Étage 2 — Mineures flottantes (6)** : MXN, ZAR, PLN, HUF, CZK, ILS — flotteurs propres et liquides.
+  Rôle : élargir le réseau + premières vérifications de sens des flèches (elles partagent moins de
+  confondants que les majeures — argument de Mert).
+- **Étage 3 — Contrôles négatifs purs (2-3, « random currencies »)** : devises exotiques dont l'influence
+  attendue sur les majeures est clairement nulle — candidates : CLP, COP, PHP (sous réserve de la sonde de
+  disponibilité — « if data permits »). Rôle exclusif : **falsification** — toute flèche exotique → majeure
+  détectée avec force est un signal d'erreur de la méthode (V8). Elles n'entrent ni dans les poids NEER des
+  autres, ni dans les résultats présentés — ce sont des témoins.
 - **Exclues avec motif** : CNY (flottement géré), INR/KRW/BRL (interventions/contrôles partiels — candidates
-  de 2ᵉ vague si le sanity check en veut plus), TRY (inflation extrême → non-stationnarité structurelle),
-  DKK (arrimée à l'EUR → colinéarité).
-- **K = 16 nœuds**, 15 paires vs USD à ingérer (l'USD n'a pas de paire propre : sa force vient du panier).
+  de 2ᵉ vague), TRY (inflation extrême → non-stationnarité structurelle), DKK (arrimée à l'EUR → colinéarité).
+- **K = 16 nœuds d'étude + 2-3 témoins** ; 17-18 paires vs USD à ingérer (l'USD n'a pas de paire propre :
+  sa force vient du panier).
 - Nœuds latents assumés (observabilité partielle du cadre AAAI) : toutes les devises hors univers + facteurs
   communs non modélisés.
 
@@ -45,8 +55,17 @@ avec assez d'échantillons (V3), stocké et partageable avec Mert (V12). Six ét
   | 1 h | ~6 200 | **~105 000** — l'échelle des expériences du papier |
   | 15 min | ~25 000 | ~425 000 |
   | 1 jour (référence) | ~260 | ~4 400 |
+- **Contrainte d'horizon stationnaire (Mert 17/07 : « we should be on a stationary horizon more or less »
+  — l'algorithme suppose l'équilibre)** : les ~105k échantillons 2009→2026 ne forment PAS une fenêtre
+  d'estimation valide — 17 ans de FX traversent des régimes distincts (QE, choc SNB 2015, COVID, hausses
+  2022). **L'unité d'estimation = fenêtre calendaire courte (ordre 1-3 ans), la densité intraday fournissant
+  les échantillons À L'INTÉRIEUR de la fenêtre** (ex. 1 an de 15 min ≈ 25k points dans un seul régime).
+  C'est la vraie résolution de la tension de Mert : horizon stationnaire (court) × bruit (besoin
+  d'échantillons) → l'intraday concilie les deux. Le backfill complet sert aux analyses roulantes et à la
+  stabilité temporelle, jamais à une estimation poolée sur 17 ans.
 - **La grille d'horizons de Mert (V9) devient bidimensionnelle : fréquence de barre × longueur de fenêtre.**
-  Le test synthétique (Phase 4) dira le minimum d'échantillons requis ; la 1h est le point de départ.
+  Le test synthétique (Phase 4) dira le minimum d'échantillons requis ; départ : barres 1h sur fenêtres
+  de 2 ans, puis balayage.
 - Coût backfill : ~52 requêtes/paire (120 j/requête) × 15 paires × 5 crédits ≈ **~4 000 crédits one-shot**
   (plafond quotidien 90k — marge confortable). Incrément quotidien ensuite : 15 requêtes/jour, négligeable.
 

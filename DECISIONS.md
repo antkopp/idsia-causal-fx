@@ -54,6 +54,13 @@ Format : date — décision — motif/source. Les points de vigilance associés 
   `S = signe(Â_VAR)` issue des coefficients Granger/VAR de la sous-étape 1B (gratuite, même estimation).
   À valider avec Mert ; fournit le sens des trades en Phase 6 (V19).
 
+- **Relecture du mail de Mert 17/07 → deux amendements Phase 1 (28/07)** :
+  (i) univers en **3 étages** — majeures / mineures flottantes / **contrôles négatifs purs** (2-3 exotiques
+  « random », candidates CLP/COP/PHP, hors poids NEER et hors résultats, rôle exclusif de falsification) ;
+  (ii) **l'unité d'estimation est une fenêtre calendaire courte (1-3 ans, régime stationnaire)** — jamais
+  2009→2026 poolé ; l'intraday sert à densifier l'intérieur de la fenêtre, ce qui concilie les deux
+  contraintes de Mert (stationnarité vs bruit).
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).
