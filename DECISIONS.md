@@ -46,6 +46,14 @@ Format : date — décision — motif/source. Les points de vigilance associés 
   les méthodes du pipeline tel que construit (PLAN §5.0, V23, futur `docs/HYPOTHESES.md`). Verdict tripartite
   par hypothèse ; alimentée en continu à chaque méthode adoptée ; conditionne la note à Mert ET la Phase 6.
 
+- **Données : cap sur l'intraday FX (28/07)** — parade principale à V3 (déficit d'échantillons en journalier).
+  Chantier ETL de la Phase 1 : recharger l'historique intraday FX (EODHD) ; granularité à trancher en Phase 1,
+  dimensionnée par le test synthétique (besoin réel en échantillons).
+- **Signe des influences (28/07)** — architecture actée : **A = magnitude** (valeur absolue de l'influence,
+  compatible avec l'hypothèse A ≥ 0 du cadre AAAI'24) + **couche de signe séparée**. Candidat naturel :
+  `S = signe(Â_VAR)` issue des coefficients Granger/VAR de la sous-étape 1B (gratuite, même estimation).
+  À valider avec Mert ; fournit le sens des trades en Phase 6 (V19).
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).
