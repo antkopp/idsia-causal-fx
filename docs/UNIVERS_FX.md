@@ -96,6 +96,20 @@ AED (peg USD), TRY (inflation/interventions). CLP : admissible mais affectée à
 | HUF | — | — | stress oct. 2022 |
 | CLP (témoin) | — | interventions annoncées 2019, juil.-déc. 2022 | — |
 
+### Statut exact des témoins (étage 3) — inclus dans l'estimation, en quarantaine interprétative
+
+Les témoins SONT des nœuds du panel B (séries construites, présents dans le VAR, flèches estimées).
+Trois exclusions précises, chacune motivée :
+1. **Hors poids NEER des nœuds d'étude** : (i) ne pas injecter leur bruit de microstructure (V28) dans les
+   séries de force des devises d'étude ; (ii) garder des séries de force IDENTIQUES entre panels A et B —
+   la comparaison A vs B (stabilité de la structure majeure quand on ajoute les mineures) est un test en soi.
+2. **Hors résultats interprétés — pré-enregistrement du contrôle** : toute flèche témoin → majeure est par
+   décision PRÉALABLE une anomalie de méthode, jamais une découverte. Sans cette règle gravée avant de
+   regarder les données, chaque fausse flèche serait rationalisable a posteriori (« le lien cuivre ! ») et
+   le détecteur d'erreur perdrait toute valeur (garden of forking paths).
+3. **Hors panel A et hors Phase 6** : design hard-only validé avec Mert ; on ne trade pas des nœuds déclarés
+   ininterprétables.
+
 ### Cas-limites documentés
 
 1. **CLP** : à ~0,3 % et flottement propre, admissible en étage 2 (comme HUF). Affectée aux **témoins par
