@@ -26,11 +26,23 @@ en Phase 5.0 sur le système réellement construit.
 | Inversibilité / conditionnement de R̂₀ (features T, Granger) | éq. features T | **Menacée** (coupe transversale des forces quasi-colinéaire) | Poids BIS asymétriques ; surveillance du conditionnement ; ridge/pinv prêts | V24 | — |
 | Poids 1B identifiés à échelle près (σ²_gap inobservable) | Théorème 1 | Structurelle | Convention de normalisation ; fixée naturellement par la contrainte left-stochastic du mapping SLM (donne δ̂) | V15, V16 | — |
 
-## 2. Kayaalp & Sayed (JMLR 2026) — influence causale C(m→k) + CausalRank
+## 2. Kayaalp & Sayed (JMLR 2026) — influence causale C(m→k) + CausalRank (adoptée Phase 0, revue 05/08)
 
-*(À déposer — revue des blocs 5-8 en cours, 04/08. Socle : tableau §5 de FICHE_KAYAALP_SAYED_2023.md :
-i.i.d. temporel des signaux, forte connexité + self-loop, A left-stochastic, θ° stationnaire → variante ASL,
-identifiabilité globale d̄>0, H=2, δ/β.)*
+| Hypothèse | Où (papier) | Statut provisoire | Parade / test | Vigilance | Verdict 5.0 |
+|---|---|---|---|---|---|
+| Signaux privés i.i.d. dans le temps, vraisemblances time-invariantes | Sec. 3.1 | **Douteuse** (hétéroscédasticité, régimes FX) | Standardisation par vol ; fenêtres roulantes ; drift des distributions reconnu comme limite par le papier lui-même | — | — |
+| Corrélation spatiale des signaux autorisée (confondants latents OK) | Sec. 3.1 + Fig. 13 | Satisfaite par design (robustesse démontrée Fig. 13) | — | V5 | — |
+| Graphe fortement connexe + ≥1 self-loop | Sec. 3.2 | **À tester sur la Â estimée** (rien ne la garantit) | Seuillage/régularisation pour irréductibilité ; self-loops ε si besoin | — | — |
+| A left-stochastic (colonnes somment à 1 ; a_ℓk = poids de k sur ℓ) | Sec. 3.2, éq. 2 | **Violée par une A de régression brute** | Normalisation des colonnes après transposition correcte ; c'est elle qui fixe l'échelle (V15) et donne δ̂ (V16) ; test d'orientation obligatoire (V17) | V15-V17 | — |
+| État du monde θ° fixe/stationnaire | Sec. 3.1 | **Violée en FX longue période** — élimine NBSL (λ diverge, Théorème 1) | Variante **ASL** obligatoire (δ>0, conçue pour la non-stationnarité) + fenêtres courtes (V9) | V16 | — |
+| Identifiabilité globale : d̄ > 0 strict | Def. 1 | À imposer par construction | Ne JAMAIS poser d=0 (C dégénère, A disparaît du résultat) ; d̄ = hyperparamètre balayé, ou d̂ via résidus (éq. 82) / intercept du VAR | V18 | — |
+| H fini ; choix H=2 | Sec. 3.1 | Choix de modélisation acté (formules sigmoïdes, d scalaire par nœud) | — | — | — |
+| δ ∈ (0,1), β > 0 connus | Sec. 3.4, Alg. 2 | Non observés directement | δ̂ = 1 − somme de ligne moyenne de M̂ (V16) ; β := 1 (non identifiable séparément de l'échelle de d) | V16 | — |
+| Dose d'intervention : convention uniforme μ_m = 1/H | éq. 41/70 | Convention actée (équiv. average causal derivative effect) | — | — | — |
+| Diagonale de C = 1−1/H (convention pour primitivité/Perron) | éq. 75 | Convention actée | Ne pas interpréter économiquement | V19 | — |
+| C = magnitude non signée ∈ (0,1) | Def. C | Structurelle | Le sens des trades Phase 6 vient d'une couche séparée (signes VAR, V14) | V14, V19 | — |
+| Monte-Carlo : moyenner les λ PUIS sigmoïde (espérance dans l'exponentielle) | éq. 16-17 | Piège d'implémentation | À respecter dans toute validation simulation (Jensen) | V19 | — |
+| GCL : modèle ASL correct + Â de bonne qualité en entrée | Sec. 7, Théorème 3 | Conditionnée à la réussite du papier 1 | Test de récupération bout-en-bout Phase 4 ; garantie O(1/√M) seulement si le modèle est bon | V20 | — |
 
 ## 3. Construction des données (Phase 1)
 
