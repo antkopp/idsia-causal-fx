@@ -74,6 +74,38 @@ turnover : exclue par R2 seul. C'est la seule devise flottante au monde écarté
    latent, son effet est absorbé par le bruit corrélé et le biais E_S caractérisé (éq. 5 du papier).
    L'exhaustivité requise n'est donc pas celle des nœuds, mais celle de la **disposition** — établie ci-dessus.
 
+## Fermeture de l'étage 2 (preuve par énumération de la bande 0,3-1,5 %)
+
+La bande complète compte 14 devises (rangs BIS 16-29) : MXN, TWD, ZAR, BRL, DKK, PLN, THB, ILS, IDR, CZK,
+AED, TRY, HUF, CLP. Retenues : MXN, ZAR, PLN, ILS, CZK, HUF. Chaque exclusion échoue nommément à un
+critère : TWD (gérée), BRL (contrôles IOF), DKK (arrimée EUR), THB (interventions BoT), IDR (gérée),
+AED (peg USD), TRY (inflation/interventions). CLP : admissible mais affectée à l'étage 3 (cas-limite n°1).
+**Aucun flotteur admissible de la bande n'est omis.**
+
+### Flags de régime par devise (étages 1-2, validés 05/08)
+
+| Devise | Fenêtres inéligibles | Fenêtres flaguées | Flags d'événements |
+|---|---|---|---|
+| CHF | sept. 2011 - janv. 2015 (plancher BNS) | 2015-2022 (interventions lourdes) | 15/01/2015 (sortie du plancher — outlier) |
+| CZK | nov. 2013 - avr. 2017 (plancher CNB) | mai-oct. 2022 (défense annoncée) | — |
+| ILS | oct. 2023 - début 2024 (défense BoI, guerre) | ≤ 2022 (programmes d'achats USD systématiques) | — |
+| JPY | — | — | interventions MoF sept.-oct. 2022, avr.-mai 2024 |
+| GBP | — | — | stress LDI sept.-oct. 2022 |
+| PLN | — | — | interventions NBP 2010, 2020 |
+| MXN | — | — | enchères Banxico 2016-17 |
+| HUF | — | — | stress oct. 2022 |
+| CLP (témoin) | — | interventions annoncées 2019, juil.-déc. 2022 | — |
+
+### Cas-limites documentés
+
+1. **CLP** : à ~0,3 % et flottement propre, admissible en étage 2 (comme HUF). Affectée aux **témoins par
+   choix de design** : profil idéal du contrôle négatif de Mert (périphérique au cœur G10, corrélée via le
+   cuivre — confondants sans influence plausible). Si promue en étage 2, il ne resterait que COP en témoin ferme.
+2. **RUB** : flotteur liquide ~2015-2021 (~1-2 %), marché cassé depuis 2022 (R5). Exclu aussi des fenêtres
+   historiques pré-2022 par **cohérence du panel** : l'ensemble des nœuds doit être constant entre fenêtres
+   pour que les matrices A soient comparables. Choix assumé.
+3. **ISK** : seule devise flottante au monde exclue uniquement par liquidité (R2, < 0,05 %).
+
 Sources : [BIS Triennial 2022 — FX turnover](https://www.bis.org/statistics/rpfx22_fx.htm) ·
 [BIS rpfx22](https://www.bis.org/statistics/rpfx22.htm) · classifications de régime : FMI AREAER (de facto),
 millésimes 2022-2023. Révision prévue quand l'enquête 2025 ([rpfx25](https://www.bis.org/statistics/rpfx25_fx.htm))
