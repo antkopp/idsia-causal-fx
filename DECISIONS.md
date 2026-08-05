@@ -61,6 +61,31 @@ Format : date — décision — motif/source. Les points de vigilance associés 
   2009→2026 poolé ; l'intraday sert à densifier l'intérieur de la fenêtre, ce qui concilie les deux
   contraintes de Mert (stationnarité vs bruit).
 
+## 2026-07-29 → 2026-08-03 (échange design complet avec Mert)
+
+**Emails Antoine 29/07** (design synthétisé et envoyé — engagements pris) :
+- Two-stage : support via classifieur + **poids via l'estimateur de moments rescalé** (masquage de l'estimation
+  pleine matrice OU moindres carrés sur les parents identifiés) ; C_m→k via GCL, **informativité estimée
+  depuis la récursion des log-croyances**.
+- ASL (stationnaire, aligné Santos), **H=2** (« currency = strong or weak »).
+- Données : **fenêtres ≈ 4 mois en barres 1 min** (≈ budget d'échantillons de Santos et al.) ; indices de
+  force maison, méthodologie BIS NEER ; **deux panels** — hard+soft (check) et hard-only.
+- Signes/échelles de temps : **M signée, A = |M|, M = estimateur de différence de moments (R̂₁−R̂₃), pas
+  Granger** ; matrice des signes = signe de la **réponse impulsionnelle cumulée de M sur le holding period** ;
+  le signe dépend du hp. + 3 papiers non-linéaires partagés (Liang-Kleeman, Sugihara CCM, review Runge) — parqués.
+
+**Réponse Mert 03/08** :
+- **Directive « naive first »** : Santos suppose un système **zéro-mean** (pas d'état → pas de confondant chez
+  eux) ; les extensions (confondants, non-linéaire) améliorent mais ne sauvent pas une méthode qui ne marche
+  pas — **d'abord l'apprentissage naïf de A + validation par simulations** (les simulations sont l'arbitre) ;
+  **hp/signes incorporés APRÈS l'analyse initiale** (le mécanisme de signes n'est ni validé ni rejeté — différé).
+- **A dirigée confirmée** : symétrie requise pour les théorèmes seulement, pas pour la stratégie (V1 statué).
+- Papier heavy-tailed : statique (pas séries temporelles), §5.2 intéressant ; deux axes laissés **ouverts** :
+  journalier/long terme vs causal court terme ; transitoire-depuis-équilibre vs transitoire-depuis-transitoire.
+
+**Conséquences plan** : la Phase 2 commence par le pipeline naïf zéro-mean strict ; le test synthétique
+(Phase 4) remonte en priorité absolue (c'est l'arbitre annoncé à Mert) ; couche de signes/hp = après.
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).

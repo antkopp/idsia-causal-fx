@@ -33,7 +33,8 @@ Les deux étapes scientifiques successives (validées) :
 - 1.1 Univers : 10 majeures G10 + 6 mineures flottantes (MXN, ZAR, PLN, HUF, CZK, ILS) = K=16 nœuds.
 - 1.2 Cotations : 15 paires USD EODHD, triangulation par pivot USD ; sonde de disponibilité t0 par paire (V25).
 - 1.3 Granularité : ingestion 1m depuis 2009 (~4 000 crédits one-shot), agrégation 15m/1h ;
-  1h ⇒ ~105k échantillons = l'échelle du papier (résout V3).
+  fenêtre d'estimation cible = **1 min × ~4 mois ≈ 125k échantillons** (engagement email 29/07, résout V3
+  dans une fenêtre mono-régime) ; grille 2D fréquence × fenêtre autour.
 - 1.4 Série de force : NEER log, poids BIS (asymétriques — évite la singularité V24), Δs standardisé par
   vol glissante (V2) ; ne pas écraser l'intercept (V18).
 - 1.5 Panel synchrone UTC 24/5, règles de trous journalisées.
@@ -42,7 +43,10 @@ Les deux étapes scientifiques successives (validées) :
 
 ## Phase 2 — Identification de A (Santos et al.)
 
-- Portage/adaptation du code walkthrough ; ré-entraînement FFNN sur régimes calqués sur le nôtre
+- **Ordre imposé par Mert (03/08, V27) : pipeline NAÏF d'abord** — zéro-mean (séries démoyennées par
+  fenêtre, V26), linéaire, sans confondants explicites, sans signes/hp — validé par simulations avant toute
+  extension. Les simulations sont l'arbitre annoncé.
+- Ré-implémentation from scratch (V11/V20) ; ré-entraînement FFNN sur régimes calqués sur le nôtre
   (N petit 10-30, β élevé — V4).
 - **Grille d'horizons** (hyperparamètre critique, Mert 17/07) ; nœuds latents assumés (devises non modélisées,
   facteurs latents) ; bruit corrélé toléré sans hypothèse sur sa nature (confondants FX : force USD,

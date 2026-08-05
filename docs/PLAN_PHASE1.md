@@ -26,6 +26,9 @@ that is a sign for us that somethings are going wrong ») :
   de 2ᵉ vague), TRY (inflation extrême → non-stationnarité structurelle), DKK (arrimée à l'EUR → colinéarité).
 - **K = 16 nœuds d'étude + 2-3 témoins** ; 17-18 paires vs USD à ingérer (l'USD n'a pas de paire propre :
   sa force vient du panier).
+- **Organisation en deux panels d'estimation** (annoncée à Mert le 29/07) : **panel A « hard-only »**
+  (étage 1 seul) et **panel B « hard+soft »** (étages 1+2+3, témoins inclus pour le check). Les résultats
+  principaux sortent du panel A ; le panel B sert la falsification et la comparaison de stabilité.
 - Nœuds latents assumés (observabilité partielle du cadre AAAI) : toutes les devises hors univers + facteurs
   communs non modélisés.
 
@@ -58,14 +61,16 @@ that is a sign for us that somethings are going wrong ») :
 - **Contrainte d'horizon stationnaire (Mert 17/07 : « we should be on a stationary horizon more or less »
   — l'algorithme suppose l'équilibre)** : les ~105k échantillons 2009→2026 ne forment PAS une fenêtre
   d'estimation valide — 17 ans de FX traversent des régimes distincts (QE, choc SNB 2015, COVID, hausses
-  2022). **L'unité d'estimation = fenêtre calendaire courte (ordre 1-3 ans), la densité intraday fournissant
-  les échantillons À L'INTÉRIEUR de la fenêtre** (ex. 1 an de 15 min ≈ 25k points dans un seul régime).
-  C'est la vraie résolution de la tension de Mert : horizon stationnaire (court) × bruit (besoin
-  d'échantillons) → l'intraday concilie les deux. Le backfill complet sert aux analyses roulantes et à la
-  stabilité temporelle, jamais à une estimation poolée sur 17 ans.
-- **La grille d'horizons de Mert (V9) devient bidimensionnelle : fréquence de barre × longueur de fenêtre.**
-  Le test synthétique (Phase 4) dira le minimum d'échantillons requis ; départ : barres 1h sur fenêtres
-  de 2 ans, puis balayage.
+  2022). **L'unité d'estimation = fenêtre calendaire courte, la densité intraday fournissant les échantillons
+  À L'INTÉRIEUR de la fenêtre.** C'est la résolution de la tension de Mert : horizon stationnaire (court)
+  × bruit (besoin d'échantillons) → l'intraday concilie les deux. Le backfill complet sert aux analyses
+  roulantes et à la stabilité temporelle, jamais à une estimation poolée sur 17 ans.
+- **Fenêtre cible annoncée à Mert (email 29/07) : ≈ 4 mois en barres 1 min** — ~125k échantillons
+  (24h × 5j ≈ 7 200 min/sem × ~17 sem), soit le budget des expériences de Santos et al. concentré dans une
+  fenêtre calendaire courte, plausiblement mono-régime.
+- **La grille d'horizons de Mert (V9) reste bidimensionnelle : fréquence de barre × longueur de fenêtre.**
+  Départ = 1 min × 4 mois (l'engagement email) ; balayage autour (15m/1h × 6 mois-2 ans) pour la
+  sensibilité ; le test synthétique (Phase 4) confirme le minimum d'échantillons requis.
 - Coût backfill : ~52 requêtes/paire (120 j/requête) × 15 paires × 5 crédits ≈ **~4 000 crédits one-shot**
   (plafond quotidien 90k — marge confortable). Incrément quotidien ensuite : 15 requêtes/jour, négligeable.
 
@@ -83,8 +88,9 @@ that is a sign for us that somethings are going wrong ») :
 - **Standardisation (V2, homogénéité nodewise)** : `Δs_i` divisé par sa volatilité glissante
   (fenêtre à fixer, départ : 60 barres) → variances ~égales entre nœuds et atténuation du clustering de vol
   (rapproche de l'hypothèse i.i.d. temporelle).
-- **Ne pas centrer aveuglément** : l'intercept du VAR encode l'informativité d (V18/fiche K&S §6) —
-  le retrait de moyenne se fait dans l'estimateur (moments centrés, V21), pas en écrasant la moyenne des séries.
+- **Centrage : réconciliation V26** (Mert 03/08 : Santos suppose un système zéro-mean) — les séries entrant
+  dans le pipeline Santos naïf (étape 1) sont **démoyennées par fenêtre** ; la moyenne retirée est **conservée
+  à part** car l'intercept du VAR encode l'informativité d (V18/fiche K&S §6), estimée en Phase 3.
 
 ## 1.5 Calendrier & alignement du panel
 
