@@ -96,6 +96,14 @@ est une règle d'analyse, pas une structure de données) :
 - **Standardisation (V2, homogénéité nodewise)** : `Δs_i` divisé par sa volatilité glissante
   (fenêtre à fixer, départ : 60 barres) → variances ~égales entre nœuds et atténuation du clustering de vol
   (rapproche de l'hypothèse i.i.d. temporelle).
+- **Panier restreint aux nœuds (vs ~60 partenaires BIS) — choix assumé** : (i) pas de marché 1-min pour
+  une grande partie des 60 (bruit injecté dans TOUTES les séries via le panier) ; (ii) fermeture du système
+  (`s = W·p` fonction des seuls nœuds → mapping SLM propre) ; (iii) les grands absents (CNY, gérées) sont
+  des quasi-doublons de leur ancre à nos fréquences (≈ re-poids USD/EUR, pas d'information perdue).
+  Prix : s_i = « force contre le bloc flottant », pas le NEER commerce stricto sensu — hypothèse à déposer
+  dans HYPOTHESES.md. **Test quantitatif prévu** : notre indice agrégé en journalier corrélé au NEER BIS
+  officiel journalier, par devise (attendu > 0,9 sur les variations pour les majeures) — l'écart de panier
+  devient une mesure, pas une opinion.
 - **Centrage : réconciliation V26** (Mert 03/08 : Santos suppose un système zéro-mean) — les séries entrant
   dans le pipeline Santos naïf (étape 1) sont **démoyennées par fenêtre** ; la moyenne retirée est **conservée
   à part** car l'intercept du VAR encode l'informativité d (V18/fiche K&S §6), estimée en Phase 3.
