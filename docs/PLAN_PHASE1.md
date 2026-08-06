@@ -136,11 +136,22 @@ est une règle d'analyse, pas une structure de données) :
 
 - **Formule** : pour la devise i, force en log :
   `s_i(t) = Σ_{j≠i} w_ij · [log P_iUSD(t) − log P_jUSD(t)]`, poids `Σ_j w_ij = 1`.
-- **Poids : BIS effective exchange rate weights** (paniers larges publiés par la BIS), restreints à notre
-  univers K et renormalisés. Motifs : (i) c'est la référence « standard and well documented » annoncée à Mert
-  (email 14/07, esprit NEER/BIS) ; (ii) les poids commerciaux sont **asymétriques** (w_ij ≠ w_ji), ce qui
-  évite la singularité exacte de V24. Repli si récupération BIS trop lourde : poids égaux + pseudo-inverse
-  (V24 assumé).
+- **Poids : RECALCULÉS selon la méthodologie BIS, adaptés à notre univers, PIT par fenêtre (décision 05/08).**
+  La formule BIS (Turner & Van 't dack 1993 ; Klau & Fung 2006) = parts de commerce manufacturier bilatéral,
+  imports + exports avec double-pondération de troisième marché. Notre adaptation : **parts de commerce
+  bilatéral imports+exports (simple pondération) entre nos K devises, source FMI DOTS** (hook existant dans
+  l'ETL IMF SDMX), renormalisées sur l'univers — la double-pondération (qui exige les productions
+  domestiques) est une simplification documentée dans HYPOTHESES.md. **Règle PIT : la fenêtre démarrant en
+  t utilise les flux du dernier exercice DOTS publié avant t (lag conservateur 1 an)** — zéro look-ahead de
+  millésime par construction. Poids asymétriques (w_ij ≠ w_ji) → évitent la singularité exacte V24.
+  Sensibilité systématique : poids égaux + pseudo-inverse. Diagnostics conservés : taux de couverture du
+  panier par devise + corrélation de notre indice vs NEER BIS officiel journalier.
+- **Inventaire anti-biais des données (05/08, à déposer dans HYPOTHESES.md)** : look-ahead poids = éliminé
+  (PIT par fenêtre) ; look-ahead univers & survivorship = bénins et prouvés (univers **rétro-valide** :
+  chaque devise retenue flottante et liquide sur toute la période 2009-2026 ; changements de régime traités
+  par flags ; seule victime RUB, documentée) ; **standardisation trailing only** (vol glissante et profil
+  horaire sur le passé de la barre — tolérance intra-fenêtre pour l'estimation, strict dès la Phase 6) ;
+  éligibilité par époque ; toutes les fenêtres du pas mensuel calculées (pas de sélection de fenêtres).
 - **Stationnarisation** : l'entrée du VAR = **log-rendements de la force** `Δs_i(t)` par barre
   (les niveaux sont des quasi-marches aléatoires — non stationnaires, cf. fiche K&S).
 - **Standardisation (V2, homogénéité nodewise)** : `Δs_i` divisé par sa volatilité glissante
