@@ -197,12 +197,16 @@ est une règle d'analyse, pas une structure de données) :
 Réutilise l'infrastructure existante (swiss-wealth-etl + R2 + Supabase) :
 
 - **Stockage** :
-  - **R2 parquet = source de vérité** : barres 1m par paire, partition hive `pair/year`
-    (~95-115 M lignes, ~2-3 Go compressés). Pattern identique au datalayer prix existant.
-  - **Supabase** : `fx_bars_1m` (copie de commodité, **table partitionnée nativement par année**,
-    ~10-15 Go avec index — la plus grosse table de la base, reconstructible depuis R2, jamais l'inverse),
-    `fx_bars_15m` / `fx_bars_1h` (agrégats), `fx_strength` (s, Δs, Δs standardisé, id de segment, version
-    des poids), `fx_weights` (matrices DOTS PIT par époque), `fx_panel_log` (auditabilité V29).
+  - **Amendement 06/08 (utilisateur) : le backfill charge TOUTES les fréquences natives EODHD en
+    entier** — 1m (2009→), 5m et 1h (oct. 2020→, natifs). `raw.*` = natif exclusivement ; le 15m et
+    tout autre pas sont des DÉRIVÉS calculés en aval (datalayer/strength), jamais stockés en raw.
+    Bonus V29 : cross-check agrégation vs natif sur TOUT le post-2020. Coût : ~910 req ≈ 4 550 crédits.
+  - **R2 parquet = source de vérité** : barres natives par fréquence × paire, partition hive
+    `freq/pair/year` (~100-125 M lignes, ~3 Go compressés). Pattern identique au datalayer prix existant.
+  - **Supabase** : `raw.fx_bars_1m` (copie de commodité, **partitionnée par année**, ~10-15 Go avec index —
+    reconstructible depuis R2, jamais l'inverse), `raw.fx_bars_5m` / `raw.fx_bars_1h` (natifs),
+    `analytics.fx_strength` (s, Δs, Δs standardisé, id de segment, version des poids),
+    `analytics.fx_weights` (matrices DOTS PIT par époque), `public.fx_panel_log` (auditabilité V29).
 - **Jobs dans swiss-wealth-etl** (frontière validée : mécanique dans l'ETL, science — poids/force/segments —
   dans idsia-causal-fx qui lit Supabase/R2 via son datalayer `as_of`). Réutilisation de l'existant : client
   EODHD, RateLimiter crédits (`eodhd_credits.py`), `jobs_registry`/`etl_log`, writers parquet R2 hive,
