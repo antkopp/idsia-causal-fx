@@ -102,6 +102,27 @@ Format : date — décision — motif/source. Les points de vigilance associés 
 - Cas-limites documentés : CLP (admissible, intégrée soft), RUB (exclu même en historique, cohérence du
   panel), ISK (seule flottante exclue par pure liquidité), SGD (hard au sens qualité mais NEER administré).
 
+## 2026-08-05 (revue 1.2 → 1.6 — Phase 1 intégralement spécifiée)
+
+- **1.2** : convention BASE+PRIX normalisée (`p_i = log(USD par unité de i)`) ; pivot USD, croisés
+  triangulés ; close de barre ; ordre log-niveaux → NEER → différence, poids figés par fenêtre ; sonde
+  avec verdicts pré-enregistrés + revue d'exhaustivité (partition 5 classes, 7 checks ajoutés, sous-unités
+  10^k triplement couvertes) ; **QC à deux étages** (sonde ∪ audit post-backfill, V29 bloquant).
+- **1.3** : fenêtres 4 mois pas mensuel (~200/panel) ; grille 2D avec budgets ; règle 3 niveaux
+  fenêtres × flags (événement/administré/doux) ; coupes de résultats chiffrées ; convention PIT.
+- **1.4** : **poids recalculés méthodologie BIS adaptée** (DOTS imports+exports simple pondération, sur
+  notre univers, **PIT par fenêtre** — dissout le look-ahead de millésime) ; inventaire anti-biais
+  (univers rétro-valide, trailing only, pas de bfill/interpolation).
+- **1.5** : horloge 17h NY DST-consciente ; 24/5 (week-end = vrai trou de marché) ; exclusion rollover
+  [17h-18h) NY ; structure de segments (ffill ≤ 3, bfill interdit) ; journée morte < 50 % ; `fx_panel_log`.
+- **1.6** : R2 = source de vérité + copie 1m dans Supabase (partitionnée par année, ~10-15 Go, décision
+  utilisateur) ; 7 jobs, mécanique dans swiss-wealth-etl (réutilisation client EODHD, RateLimiter crédits,
+  registres, writers R2) / science dans idsia-causal-fx ; accès Mert = Postgres RO + token R2 scopé,
+  dérivées immédiates, brutes conditionnées à V30 (licence EODHD).
+- **Correctif de fait** : le FX est 24/5, pas 24/7 — la parenthèse « run on weekends » de l'email du 29/07
+  à Mert était inexacte (aucun impact sur les budgets, calculés en 24×5) ; à formuler proprement dans la
+  prochaine note.
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).

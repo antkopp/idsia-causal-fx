@@ -192,23 +192,33 @@ est une règle d'analyse, pas une structure de données) :
 - **`fx_panel_log`** : chaque exclusion (barre, journée, segment, quarantaine) avec code de raison, portée,
   horodatage — auditabilité complète, matière première de l'audit post-backfill (V29).
 
-## 1.6 Stockage, ETL, partage (V12)
+## 1.6 Stockage, ETL, partage (validé 05/08)
 
 Réutilise l'infrastructure existante (swiss-wealth-etl + R2 + Supabase) :
 
-- **R2 parquet** (brut volumineux) : barres 1m par paire, partition hive `pair/year`
-  (~95 M lignes, ~2-3 Go compressés). Pattern identique au datalayer prix existant.
-- **Supabase** (dérivés consultables — c'est ce qu'on partage à Mert) :
-  - `fx_bars_1h` / `fx_bars_15m` : barres agrégées par paire (~1,6 M lignes en 1h) ;
-  - `fx_strength` : séries de force par devise × barre (s, Δs, Δs standardisé) + version des poids ;
-  - `fx_panel_log` : journal des barres/journées exclues (auditabilité).
-- **ETL dans swiss-wealth-etl** (registre `jobs_registry` + `etl_log`, conventions existantes) :
-  1. `fx_intraday_probe` (one-shot) : sonde t0 par paire ;
-  2. `fx_intraday_backfill` (one-shot, reprise sur erreur, respect du RateLimiter crédits) ;
-  3. `fx_intraday_daily` (cron) : incrément J-1 + recalcul des agrégats/force du jour ;
-  4. `fx_strength_build` : construction/reconstruction des séries de force (re-jouable si les poids changent).
-- **Accès Mert** : rôle Postgres **lecture seule** limité aux tables `fx_*` (pas de clé service, pas d'accès
-  aux autres schémas). Livré avec un README d'accès (dictionnaire des colonnes, conventions).
+- **Stockage** :
+  - **R2 parquet = source de vérité** : barres 1m par paire, partition hive `pair/year`
+    (~95-115 M lignes, ~2-3 Go compressés). Pattern identique au datalayer prix existant.
+  - **Supabase** : `fx_bars_1m` (copie de commodité, **table partitionnée nativement par année**,
+    ~10-15 Go avec index — la plus grosse table de la base, reconstructible depuis R2, jamais l'inverse),
+    `fx_bars_15m` / `fx_bars_1h` (agrégats), `fx_strength` (s, Δs, Δs standardisé, id de segment, version
+    des poids), `fx_weights` (matrices DOTS PIT par époque), `fx_panel_log` (auditabilité V29).
+- **Jobs dans swiss-wealth-etl** (frontière validée : mécanique dans l'ETL, science — poids/force/segments —
+  dans idsia-causal-fx qui lit Supabase/R2 via son datalayer `as_of`). Réutilisation de l'existant : client
+  EODHD, RateLimiter crédits (`eodhd_credits.py`), `jobs_registry`/`etl_log`, writers parquet R2 hive,
+  helpers d'upsert Supabase, style de rapport de la sonde datalayer :
+  1. `fx_intraday_probe` (one-shot) → `PROBE_REPORT.md` (verdicts pré-enregistrés §1.2) ;
+  2. `fx_intraday_backfill` (one-shot résumable, ~4-5k crédits) → R2 + `fx_bars_1m` ;
+  3. `fx_intraday_audit` (one-shot post-backfill, **bloquant** V29) → `fx_panel_log` + rapport ;
+  4. `fx_bars_aggregate` (1m → 15m/1h) ;
+  5. `fx_weights_build` (DOTS → poids PIT par époque) — code science, repo idsia-causal-fx ;
+  6. `fx_strength_build` (panel × poids → force ; re-jouable) — code science, repo idsia-causal-fx ;
+  7. `fx_intraday_daily` (cron) : incrément J-1 + agrégats + force.
+- **Accès Mert (design validé, porte V30 maintenue)** : rôle Postgres **lecture seule** + **token R2 scopé
+  lecture**. Ouverture immédiate : dérivées (`fx_strength`, `fx_weights`, `fx_panel_log`). Ouverture des
+  **barres brutes** (`fx_bars_*`, R2) conditionnée à la vérification des conditions de redistribution
+  EODHD (V30 — juridique, pas technique). README d'accès : dictionnaire des colonnes, conventions
+  (17h NY, segments, standardisation), version des poids, citation.
 
 ## Critère de sortie de la Phase 1
 
