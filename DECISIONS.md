@@ -123,6 +123,24 @@ Format : date — décision — motif/source. Les points de vigilance associés 
   à Mert était inexacte (aucun impact sur les budgets, calculés en 24×5) ; à formuler proprement dans la
   prochaine note.
 
+## 2026-08-06 (sonde exécutée — v1 puis amendements v2)
+
+- **Sonde codée** (swiss-wealth-etl `fx_probe.py`, 19 tests) et **exécutée** : 371 requêtes ≈ 1 783 crédits,
+  brut en cache. Correctif SSL local (truststore, comme la sonde datalayer).
+- **Amendements v2 des règles de verdict** (autorisés par PROBE_PLAN §6.5, documentés AVANT usage aval,
+  validés par l'utilisateur) : mois vide = drapeau HOLE (plus jamais CONVENTION_FAIL) ; cohérence
+  journalière en DOUBLE convention (17h NY / jour UTC, meilleure retenue) ; barres week-end early-Sunday
+  (ouverture Wellington dès ~17h UTC dimanche) = informatif hors verdict ; **verdicts PAR ÉPOQUE →
+  « éligible depuis »** par paire × fréquence (cohérent avec les fenêtres courtes §1.3). Les seuils
+  numériques n'ont PAS bougé.
+- **Verdicts v2 (PROBE_REPORT_v2.md)** : cœur G10 éligible 1m dès 2010-08 (CAD/NOK 2015-02, CHF 2015-08) ;
+  **NZD : pas de 1m avant 2024-02** (éligible dès 2024-04, données excellentes ensuite) ; CZK dès 2010-08,
+  PLN dès 2020-08, MXN/ZAR/HUF dès 2025-02 ; **ILS et PHP : 15m seulement** ; **CLP et COP : exclues**
+  (mortes en 1m — le « if data permits » a tranché). Trou vendeur commun 2020-08 (V32) ; COHERENCE_RECENT
+  résiduel EUR/PLN à élucider à l'audit (V33) ; fix idempotence t0 à faire (V34).
+- **Convergence remarquable** : l'éligibilité data du CHF (2015-08) coïncide avec la fin de sa coupe de
+  régime (plancher BNS → mai 2015) — le panel A-9 « post-2015 » est doublement justifié.
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).
