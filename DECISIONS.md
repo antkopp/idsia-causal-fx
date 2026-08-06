@@ -141,6 +141,12 @@ Format : date — décision — motif/source. Les points de vigilance associés 
 - **Convergence remarquable** : l'éligibilité data du CHF (2015-08) coïncide avec la fin de sa coupe de
   régime (plancher BNS → mai 2015) — le panel A-9 « post-2015 » est doublement justifié.
 
+- **Décisions post-sonde (06/08, validées)** : (i) **panel A principal = 9 hard SANS NZD, fenêtres depuis
+  sept. 2015** (~120 fenêtres) + **panel A-10 avec NZD en sensibilité depuis avr. 2024** — NZD documenté
+  comme victime de données (symétrique RUB) ; (ii) **panel B = hard + {MXN, ZAR, PLN, HUF, CZK} en 1m
+  depuis févr. 2025** ; ILS + PHP en **variante 15m** ; **CLP/COP hors univers** (verdict factuel) ;
+  (iii) **backfill = 16 paires** (9 hard + NZD + 5 soft + ILS/PHP), sans CLP/COP ; fix V34 avant le tir.
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).
