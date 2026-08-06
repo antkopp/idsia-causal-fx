@@ -112,8 +112,25 @@ est une règle d'analyse, pas une structure de données) :
 - **La grille d'horizons de Mert (V9) reste bidimensionnelle : fréquence de barre × longueur de fenêtre.**
   Départ = 1 min × 4 mois (l'engagement email) ; balayage autour (15m/1h × 6 mois-2 ans) pour la
   sensibilité ; le test synthétique (Phase 4) confirme le minimum d'échantillons requis.
-- Coût backfill : ~52 requêtes/paire (120 j/requête) × 15 paires × 5 crédits ≈ **~4 000 crédits one-shot**
-  (plafond quotidien 90k — marge confortable). Incrément quotidien ensuite : 15 requêtes/jour, négligeable.
+- Coût backfill : ~52 requêtes/paire (120 j/requête) × 15-18 paires × 5 crédits ≈ **~4 000-5 000 crédits
+  one-shot** (plafond quotidien 90k — marge confortable). Incrément quotidien : 15-18 requêtes/jour.
+- **Schéma de fenêtrage (validé 05/08)** : fenêtre de base **4 mois calendaires, pas mensuel** (ancrage
+  frontières de mois, UTC) → ~200 fenêtres par panel = ~200 réplications de l'estimation (stabilité,
+  régimes, walk-forward Phase 6). Grille de sensibilité avec budgets explicites : 1m×{4,8,16,24 mois} =
+  {125k, 250k, 500k, 750k} ; 15m×{...} = {8,5k → 50k} ; 1h×{...} = {2,1k → 12,5k} — la grille réelle sera
+  tronquée sous le minimum d'échantillons établi par le test synthétique (Phase 4) ; les cellules pauvres
+  (ex. 1h×4 mois) ne servent qu'à ILLUSTRER la dégradation dans la note.
+- **Règle fenêtres × flags de régime (3 niveaux, validée 05/08)** :
+  (1) *flag d'événement* (JPY 2022/2024, GBP LDI, MXN 2016-17, HUF 2022, PLN 2010/2020) → fenêtre gardée,
+  flaguée, résultats rapportés avec/sans ;
+  (2) *période administrée* (CHF 2011-2015, CZK 2013-2017, ILS oct. 2023-début 2024) → toute fenêtre
+  chevauchante est **inéligible aux résultats** du panel concerné, mais calculée à titre diagnostique
+  (jamais un résultat) — le panel reste constant, on retire la fenêtre, pas la devise ;
+  (3) *flag doux* (CHF 2015-2022, ILS ≤2022, CLP 2019/2022) → gardée, flaguée, rapportée en double.
+  Conséquence chiffrée assumée : panel A propre ≈ 2009-août 2011 + mai 2015-aujourd'hui (~155 fenêtres) ;
+  panel B propre ≈ mi-2017-sept. 2023 + mi-2024-aujourd'hui, majoritairement en flag doux jusqu'en 2022.
+- **Convention PIT gravée dès maintenant** : une fenêtre = information jusqu'à sa dernière barre incluse ;
+  tout usage du résultat (A, C, CausalRank, signaux) ne vaut que STRICTEMENT après cette barre.
 
 ## 1.4 Série de force par devise (type NEER)
 
