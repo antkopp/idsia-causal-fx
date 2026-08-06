@@ -163,6 +163,17 @@ C̄^NB_{m→k} = σ( −d̄ · w_{m,k} )   où  w_{m,k} = [ ((I−R_m^T)^{−1} 
 ```
 avec R_m = A privée de la ligne/colonne m. **Tout vient de A, plus UN scalaire d̄ > 0.** Comme z = d̄·w est globalement monotone en w, l'ordre des influences bipartites est indépendant de d̄ ; seul le contraste (et marginalement le classement CausalRank, via la non-linéarité sigmoïde) en dépend → balayer d̄ comme unique hyperparamètre. Garde-fou : **ne pas prendre d̄ = 0** (cf. vigilance #4) ; version ASL homogène = même chose avec `(I−(1−δ)R^T)` et le terme en r, au prix de δ.
 
+## 6bis. Application Twitter du papier (Sec. 9) — référence d'échelle pour notre design
+
+- **K = 20 comptes** (sous-réseau de Shumovskaia et al. 2023), fortement connexe, incluant Elon Musk
+  (User 1) ; tweets crypto 01/01/2017 → 01/05/2022 ; croyances = **scores de sentiment NLP ∈ [0,1]**
+  (hypothèse « Bitcoin is good/useful », **H = 2**) ; GCL en mode **NBSL tel quel (δ=0, β=1)**, sans
+  raffinement (« demonstrate practical usefulness rather than the most advanced algorithm »).
+- Autres tailles du papier : robustesse aux bots K = 11 honnêtes + bots ; benchmark CPU K = 10-100.
+- **Conséquence pour nous** : notre univers FX (16-19 nœuds, H=2, forces standardisées jouant le rôle des
+  scores de sentiment) est exactement l'échelle de l'application réelle du papier — argument d'alignement
+  à citer dans la note à Mert.
+
 ## 7. Citations utiles pour la note à Mert
 
 1. « Equation (35) is a general result which shows that C^NB_{m→k} is a function of (i) the combination weights (via R), and (ii) the individual informativeness of each agent (via d_{−m}(θ)). » — Sec. 5.1, p. 14.
