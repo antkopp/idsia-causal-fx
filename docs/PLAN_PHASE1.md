@@ -169,15 +169,28 @@ est une règle d'analyse, pas une structure de données) :
   dans le pipeline Santos naïf (étape 1) sont **démoyennées par fenêtre** ; la moyenne retirée est **conservée
   à part** car l'intercept du VAR encode l'informativité d (V18/fiche K&S §6), estimée en Phase 3.
 
-## 1.5 Calendrier & alignement du panel
+## 1.5 Calendrier & alignement du panel (validé 05/08)
 
-- Timestamps **UTC** partout (le FX est 24/5, pas de fuseau « naturel » ; l'UTC évite les pièges DST).
-- Semaine FX : du dimanche ~21h UTC au vendredi ~21h UTC ; **barres de week-end exclues**.
-- **Panel synchrone obligatoire** (le VAR exige des observations simultanées) : une barre n'est retenue que
-  si TOUTES les paires ont une cote ; trous courts comblés par report de la dernière cote (limite : 3 barres) ;
-  au-delà, la barre est supprimée pour tout le panel. Journal des suppressions conservé (auditables).
-- Jours fériés globaux (1er janvier, Noël) et journées à liquidité morte : détectées par un seuil de barres
-  manquantes sur la journée → journée exclue entière.
+- **Horloge de référence = 17h00 New York** (rollover), DST-consciente : horodatages stockés en UTC, mais
+  frontières de jour et de semaine définies en heure de NY (21h UTC été / 22h UTC hiver). Journée de marché
+  = 17h NY → 17h NY ; semaine = dimanche 17h NY → vendredi 17h NY.
+- **Le FX est 24/5, PAS 24/7** : aucun marché du vendredi 17h NY au dimanche 17h NY — les week-ends sont de
+  vrais trous de marché, pas des données manquantes. Vérification empirique par la sonde (empreinte
+  week-end ≈ 0 attendu) ; barres week-end résiduelles exclues par la frontière de semaine.
+- **Zone morte du rollover** : exclusion systématique des barres de [17h00, 18h00) NY (~4 % des barres) —
+  liquidité morte, spreads erratiques (V31).
+- **Structure de SEGMENTS** (le VAR exige des observations régulièrement espacées ; les rendements ne se
+  calculent qu'à l'intérieur d'un segment — jamais à travers un trou) :
+  (1) rupture de segment à chaque week-end, journée exclue et zone de rollover (segment ≈ une journée de
+  marché de 23h) ; (2) micro-trous intra-segment : **ffill ≤ 3 barres** (compté comme rassie, rendement
+  nul) — **bfill et interpolation INTERDITS sur l'axe temporel** (look-ahead mécanique) ; (3) trou > 3
+  barres → barre supprimée panel-wide ; suppression créant un trou > 15 min → rupture de segment ;
+  (4) journée morte = < 50 % des barres attendues → journée entière exclue ; (5) barres en quarantaine
+  (scan de glitches, audit V29) → traitées comme manquantes. Coût des ruptures : ~1 rendement perdu par
+  segment — insignifiant. Hypothèse à déposer (V23) : *le temps du modèle = temps de marché concaténé par
+  segments* (dynamiques week-end non modélisées — cohérent avec l'apprentissage social entre traders actifs).
+- **`fx_panel_log`** : chaque exclusion (barre, journée, segment, quarantaine) avec code de raison, portée,
+  horodatage — auditabilité complète, matière première de l'audit post-backfill (V29).
 
 ## 1.6 Stockage, ETL, partage (V12)
 
