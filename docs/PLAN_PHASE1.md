@@ -65,6 +65,14 @@ est une règle d'analyse, pas une structure de données) :
   journalière médiane ≤ 10 bps sinon investigation ; (4) échec de convention = blocage dur (V17) ;
   (5) t0 effectif = t0 + 1 mois plein. Budget ~200 requêtes ≈ 1 000 crédits.
   Livrable : `docs/PROBE_REPORT.md` + données brutes conservées. Le panel commun démarre à `max_i t0(i)`.
+- **Sous-unités et échelles (GBX/ZAC/ILA…)** : les sous-unités sont des conventions de cotation ACTIONS
+  (déjà gérées dans le datalayer actions) — le FX cote en unités majeures ; le risque résiduel = une
+  normalisation vendeur à un facteur 10^k près, globale ou par époque. Trois détections indépendantes :
+  (i) la **table des plages plausibles** est construite discriminante à 10^±k près (GBPUSD ∈ [1,0-2,2] —
+  un facteur 100 sort de la plage) et appliquée **par époque** ; (ii) le **scan de glitches** cible les
+  sauts |Δlog| ≈ log(10)/log(100) (rupture d'échelle mi-série) ; (iii) la **cohérence vs close journalier**
+  par époque exploserait sur tout facteur résiduel. Rappel : un facteur CONSTANT disparaît dans Δs (log) —
+  seuls les changements d'échelle sont dangereux, et ils sont triplement couverts.
 - **Checks additionnels de la sonde** (revue d'exhaustivité du 05/08, preuve par partition en 5 classes —
   existence/temps/valeur/cohérence/processus) : mois-échantillons **été ET hiver** (artefacts DST) ;
   unicité + monotonie des horodatages par requête ; **scan d'outliers** (|Δlog| > seuil, sauts ≈ log 10 /
