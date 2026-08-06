@@ -86,6 +86,22 @@ Format : date — décision — motif/source. Les points de vigilance associés 
 **Conséquences plan** : la Phase 2 commence par le pipeline naïf zéro-mean strict ; le test synthétique
 (Phase 4) remonte en priorité absolue (c'est l'arbitre annoncé à Mert) ; couche de signes/hp = après.
 
+## 2026-08-05 (revue 1.1 — univers)
+
+- **Étage 1 validé** : G10 complet, prouvé fermé (UNIVERS_FX.md, recensement BIS 39 devises) ; 10 devises
+  jugées suffisantes ET maximales (T/N ~100× plus favorable que le papier ; « hard flottant » structurellement
+  épuisé par le G10). Flags de régime : CHF 2011-15 inéligible / 2015-22 flagué ; événements JPY/GBP.
+- **Étage 2 validé** : MXN, ZAR, PLN, HUF, CZK, ILS — bande 0,3-1,5 % prouvée fermée ; CZK et ILS gardées
+  avec flags (CZK : plancher 2013-17 inéligible + défense 2022 ; ILS : ≤2022 flagué + oct. 2023-24 inéligible).
+- **Filtre de liquidité requalifié** (V28) : filtre de validité de mesure dépendant de la fréquence, pas
+  d'importance économique ; seuil réel = taux de cotes rassies mesuré par la sonde.
+- **Simplification : pas d'étage « témoins » séparé** (proposition utilisateur) — CLP, COP, PHP = nœuds soft
+  ordinaires sous condition de sonde ; panier NEER unique et fixe sur tout l'univers (comparabilité A/B par
+  construction) ; la falsification survit comme **règle pré-enregistrée** (V8) : toute flèche forte
+  soft → hard = signal d'erreur, jamais une découverte.
+- Cas-limites documentés : CLP (admissible, intégrée soft), RUB (exclu même en historique, cohérence du
+  panel), ISK (seule flottante exclue par pure liquidité), SGD (hard au sens qualité mais NEER administré).
+
 ## À trancher plus tard (parqué, ne pas perdre)
 
 - Estimateur des poids 1B : Granger restreint vs R̂₁−R̂₃ rescalé → tranché par le test synthétique (Phase 4).

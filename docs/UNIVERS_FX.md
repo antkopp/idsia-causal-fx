@@ -1,6 +1,6 @@
 # Univers FX — preuve d'exhaustivité par recensement
 
-**Question** : l'univers (étages 1-3) omet-il une devise qui aurait dû y être ?
+**Question** : l'univers (étages hard/soft) omet-il une devise qui aurait dû y être ?
 **Méthode de preuve** : partir du recensement complet du marché des changes — l'enquête triennale BIS 2022
 ([rpfx22](https://www.bis.org/statistics/rpfx22_fx.htm), 52 juridictions, ~1 200 dealers), qui rapporte
 individuellement les **39 devises** représentant la quasi-totalité du turnover mondial — et **disposer de
@@ -44,11 +44,11 @@ R5 marché fonctionnel · (R6 profondeur EODHD — arbitré par la sonde, V25).
 | AED ~0,4 % | | Exclue | R1 : peg USD |
 | TRY ~0,4 % | | Exclue | R1/R5 : inflation extrême, interventions, non-stationnarité structurelle |
 | HUF ~0,3 % | | **Étage 2** | — |
-| CLP ~0,3 % | | **Étage 3 (témoin)** | free floating AREAER ; interventions exceptionnelles annoncées (2019, 2022) → flags |
+| CLP ~0,3 % | | **Étage soft (sous condition de sonde)** | free floating AREAER ; interventions exceptionnelles annoncées (2019, 2022) → flags |
 | SAR ~0,2 % | | Exclue | R1 : peg USD |
-| PHP ~0,2 % | | **Étage 3 (témoin, avec réserve)** | flottante mais lissage BSP — témoin optionnel |
+| PHP ~0,2 % | | **Étage soft (sous condition de sonde, avec réserve)** | flottante mais lissage BSP |
 | MYR ~0,2 % | | Exclue | R1/R3 : gérée, non délivrable offshore |
-| COP ~0,2 % | | **Étage 3 (témoin)** | free floating AREAER |
+| COP ~0,2 % | | **Étage soft (sous condition de sonde)** | free floating AREAER |
 | RON ~0,1 % | | Exclue | R1/R2 : flottement géré (BNR), illiquide |
 | RUB | | Exclue | R5 : marché cassé depuis 2022 (sanctions, contrôles) |
 | PEN ~0,1 % | | Exclue | R1 : interventions BCRP permanentes |
@@ -65,8 +65,8 @@ turnover : exclue par R2 seul. C'est la seule devise flottante au monde écarté
    flottante n'est omise — le G10 est un plafond structurel, pas un choix.
 2. **Étage 2 = exactement les flotteurs de la bande 0,3-1,5 % sans réserve rédhibitoire** : MXN, ZAR, PLN,
    HUF, CZK, ILS. Les autres flotteurs de la bande échouent tous à un critère (BRL contrôles, THB/IDR
-   interventions, TRY inflation) ou sont affectés aux témoins.
-3. **Étage 3 = les flotteurs sous ~0,3 %** utilisables comme contrôles négatifs : CLP, COP (+ PHP en option).
+   interventions, TRY inflation).
+3. **Les flotteurs sous ~0,3 %** (CLP, COP, PHP) rejoignent l'étage soft sous condition de sonde (simplification du 05/08 ci-dessous).
 4. **Tout le reste du monde** (~140 devises) est sous le plancher de liquidité R2 : pas de prix 1-min de
    marché continu, pas de couverture données fiable, influence plausible sur une majeure nulle.
 5. **Argument théorique décisif** : l'omission d'un nœud n'introduit PAS de biais non maîtrisé — le cadre
@@ -79,7 +79,7 @@ turnover : exclue par R2 seul. C'est la seule devise flottante au monde écarté
 La bande complète compte 14 devises (rangs BIS 16-29) : MXN, TWD, ZAR, BRL, DKK, PLN, THB, ILS, IDR, CZK,
 AED, TRY, HUF, CLP. Retenues : MXN, ZAR, PLN, ILS, CZK, HUF. Chaque exclusion échoue nommément à un
 critère : TWD (gérée), BRL (contrôles IOF), DKK (arrimée EUR), THB (interventions BoT), IDR (gérée),
-AED (peg USD), TRY (inflation/interventions). CLP : admissible mais affectée à l'étage 3 (cas-limite n°1).
+AED (peg USD), TRY (inflation/interventions). CLP : étage soft sous condition de sonde (cf. simplification du 05/08).
 **Aucun flotteur admissible de la bande n'est omis.**
 
 ### Flags de régime par devise (étages 1-2, validés 05/08)
@@ -94,27 +94,24 @@ AED (peg USD), TRY (inflation/interventions). CLP : admissible mais affectée à
 | PLN | — | — | interventions NBP 2010, 2020 |
 | MXN | — | — | enchères Banxico 2016-17 |
 | HUF | — | — | stress oct. 2022 |
-| CLP (témoin) | — | interventions annoncées 2019, juil.-déc. 2022 | — |
+| CLP | — | interventions annoncées 2019, juil.-déc. 2022 | — |
 
-### Statut exact des témoins (étage 3) — inclus dans l'estimation, en quarantaine interprétative
+### Simplification du 05/08 — pas d'étage « témoins » séparé
 
-Les témoins SONT des nœuds du panel B (séries construites, présents dans le VAR, flèches estimées).
-Trois exclusions précises, chacune motivée :
-1. **Hors poids NEER des nœuds d'étude** : (i) ne pas injecter leur bruit de microstructure (V28) dans les
-   séries de force des devises d'étude ; (ii) garder des séries de force IDENTIQUES entre panels A et B —
-   la comparaison A vs B (stabilité de la structure majeure quand on ajoute les mineures) est un test en soi.
-2. **Hors résultats interprétés — pré-enregistrement du contrôle** : toute flèche témoin → majeure est par
-   décision PRÉALABLE une anomalie de méthode, jamais une découverte. Sans cette règle gravée avant de
-   regarder les données, chaque fausse flèche serait rationalisable a posteriori (« le lien cuivre ! ») et
-   le détecteur d'erreur perdrait toute valeur (garden of forking paths).
-3. **Hors panel A et hors Phase 6** : design hard-only validé avec Mert ; on ne trade pas des nœuds déclarés
-   ininterprétables.
+L'étage 3 initialement envisagé (contrôles négatifs hors poids NEER, en « quarantaine interprétative »)
+est **supprimé** : trop de tuyauterie (paniers différenciés, séries non comparables entre panels) pour un
+bénéfice qui tient en une règle. CLP, COP, PHP rejoignent l'**étage soft** comme nœuds ordinaires, sous
+condition de sonde (t0, taux de cotes rassies — V25/V28).
+
+Ce qui est conservé de l'idée, sous forme de **règle de falsification pré-enregistrée** (V8) :
+*toute flèche forte soft → hard est, par convention gravée AVANT l'analyse, un signal d'erreur de la
+méthode — jamais une découverte.* (Sans pré-enregistrement, chaque fausse flèche serait rationalisable
+a posteriori — « le lien cuivre ! » — et le check de Mert perdrait sa valeur.) Le panier NEER est unique
+et fixe sur tout l'univers retenu : séries de force identiques dans tous les panels.
 
 ### Cas-limites documentés
 
-1. **CLP** : à ~0,3 % et flottement propre, admissible en étage 2 (comme HUF). Affectée aux **témoins par
-   choix de design** : profil idéal du contrôle négatif de Mert (périphérique au cœur G10, corrélée via le
-   cuivre — confondants sans influence plausible). Si promue en étage 2, il ne resterait que COP en témoin ferme.
+1. **CLP** : à ~0,3 % et flottement propre, admissible comme HUF — intégrée à l'étage soft (simplification du 05/08) ; son profil périphérique-mais-corrélé (cuivre) en fait le meilleur cas d'application de la règle de falsification.
 2. **RUB** : flotteur liquide ~2015-2021 (~1-2 %), marché cassé depuis 2022 (R5). Exclu aussi des fenêtres
    historiques pré-2022 par **cohérence du panel** : l'ensemble des nœuds doit être constant entre fenêtres
    pour que les matrices A soient comparables. Choix assumé.

@@ -9,26 +9,25 @@ avec assez d'échantillons (V3), stocké et partageable avec Mert (V12). Six ét
 
 **Nœuds = devises (pas les paires)** — décision actée 14/07.
 
-Univers en **trois étages** (le 3ᵉ vient du mail de Mert du 17/07 : « if data permits, putting other
-currencies can also be a check […] if the algorithm discovers that some random currency "affecting" USD →
-that is a sign for us that somethings are going wrong ») :
+Univers en **deux étages** (simplification actée le 05/08 — pas d'étage « témoins » séparé, la falsification
+est une règle d'analyse, pas une structure de données) :
 
-- **Étage 1 — Majeures (10, G10)** : USD, EUR, JPY, GBP, CHF, AUD, NZD, CAD, SEK, NOK. Le cœur de l'étude.
-- **Étage 2 — Mineures flottantes (6)** : MXN, ZAR, PLN, HUF, CZK, ILS — flotteurs propres et liquides.
-  Rôle : élargir le réseau + premières vérifications de sens des flèches (elles partagent moins de
-  confondants que les majeures — argument de Mert).
-- **Étage 3 — Contrôles négatifs purs (2-3, « random currencies »)** : devises exotiques dont l'influence
-  attendue sur les majeures est clairement nulle — candidates : CLP, COP, PHP (sous réserve de la sonde de
-  disponibilité — « if data permits »). Rôle exclusif : **falsification** — toute flèche exotique → majeure
-  détectée avec force est un signal d'erreur de la méthode (V8). Elles n'entrent ni dans les poids NEER des
-  autres, ni dans les résultats présentés — ce sont des témoins.
-- **Exclues avec motif** : CNY (flottement géré), INR/KRW/BRL (interventions/contrôles partiels — candidates
-  de 2ᵉ vague), TRY (inflation extrême → non-stationnarité structurelle), DKK (arrimée à l'EUR → colinéarité).
-- **K = 16 nœuds d'étude + 2-3 témoins** ; 17-18 paires vs USD à ingérer (l'USD n'a pas de paire propre :
-  sa force vient du panier).
-- **Organisation en deux panels d'estimation** (annoncée à Mert le 29/07) : **panel A « hard-only »**
-  (étage 1 seul) et **panel B « hard+soft »** (étages 1+2+3, témoins inclus pour le check). Les résultats
-  principaux sortent du panel A ; le panel B sert la falsification et la comparaison de stabilité.
+- **Étage 1 — Hard (10, G10)** : USD, EUR, JPY, GBP, CHF, AUD, NZD, CAD, SEK, NOK. Le cœur de l'étude.
+- **Étage 2 — Soft (6 à 9, flotteurs)** : MXN, ZAR, PLN, HUF, CZK, ILS + **CLP, COP, PHP sous condition de
+  sonde** (t0 et taux de cotes rassies, V25/V28 — si les données ne tiennent pas, elles sortent, décision
+  factuelle). Rôle : élargir le réseau + porter le « check » de Mert.
+- **Règle de falsification pré-enregistrée (V8, mail Mert 17/07)** : *toute flèche forte soft → hard est,
+  par convention préalable, un signal d'erreur de la méthode — jamais une découverte.* Gravée avant de
+  regarder les données ; c'est elle qui remplace l'ancien étage « témoins ».
+- **Un seul panier NEER fixe** sur tout l'univers retenu (poids BIS) : les séries de force sont identiques
+  dans tous les panels — comparabilité A/B garantie par construction.
+- **Exclues avec motif** : CNY (flottement géré), INR/KRW/BRL/SGD (gérées/contrôles — candidates de 2ᵉ
+  vague), TRY (inflation extrême), DKK (arrimée à l'EUR → colinéarité). Preuve d'exhaustivité : UNIVERS_FX.md.
+- **K = 16 à 19 nœuds** ; 15 à 18 paires vs USD à ingérer (l'USD n'a pas de paire propre : sa force vient
+  du panier).
+- **Deux panels d'estimation** (annoncés à Mert le 29/07) : **panel A « hard-only »** (étage 1) et
+  **panel B « hard+soft »** (tout l'univers). Résultats principaux = panel A ; panel B = check directionnel,
+  falsification, comparaison de stabilité A vs B.
 - Nœuds latents assumés (observabilité partielle du cadre AAAI) : toutes les devises hors univers + facteurs
   communs non modélisés.
 
