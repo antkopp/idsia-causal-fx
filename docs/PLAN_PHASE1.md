@@ -35,8 +35,17 @@ est une règle d'analyse, pas une structure de données) :
 
 ## 1.2 Cotations sources & triangulation
 
-- Source : EODHD, tickers `XXXUSD.FOREX` (ou `USDXXX.FOREX` selon la convention de cote du marché —
-  à normaliser à l'ingestion en **log-prix « unités d'USD par unité de XXX »**, croissant = XXX se renforce).
+- **Convention de cote** : une cote FX = montant de devise de prix pour 1 unité de devise de base, nom de
+  paire `BASE+PRIX` (EURUSD = USD par EUR ; USDJPY = JPY par USD). Normalisation unique à l'ingestion :
+  `p_i = log(prix d'1 unité de i en USD)` → `+log(cote)` si l'USD est devise de prix (EURUSD, GBPUSD,
+  AUDUSD, NZDUSD), `−log(cote)` si l'USD est la base (toutes les autres). Croissant = i se renforce.
+  Convention vérifiée par ordres de grandeur (sonde), jamais déduite du seul nom du ticker (V17).
+- **Ordre des transformations : log sur les NIVEAUX → NEER → différence.** `s_i = Σ_j w_ij·(p_i − p_j)`
+  (NEER en log = moyenne géométrique pondérée, méthodologie BIS) puis `Δs_i` = entrée du VAR (niveaux non
+  stationnaires, jamais utilisés). Comme tout est linéaire en logs, agréger-puis-différencier ≡
+  différencier-puis-agréger **ssi les poids sont constants sur la période** → règle : **poids figés par
+  fenêtre d'estimation** (revalidés aux mises à jour triennales BIS, chaînage entre fenêtres) — hypothèse
+  à déposer dans HYPOTHESES.md (V23).
 - **Pivot USD** : tout taux croisé i/j se déduit par triangulation `log P_ij = log P_iUSD − log P_jUSD`.
   On n'ingère donc QUE les 15 paires USD ; les croisés sont dérivés (cohérents par construction, pas
   d'arbitrage triangulaire résiduel dans les données dérivées).
