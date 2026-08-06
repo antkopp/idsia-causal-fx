@@ -49,9 +49,22 @@ est une règle d'analyse, pas une structure de données) :
 - **Pivot USD** : tout taux croisé i/j se déduit par triangulation `log P_ij = log P_iUSD − log P_jUSD`.
   On n'ingère donc QUE les 15 paires USD ; les croisés sont dérivés (cohérents par construction, pas
   d'arbitrage triangulaire résiduel dans les données dérivées).
-- **Tâche préalable obligatoire** : sonde de disponibilité par paire (la doc EODHD ne garantit pas 2009 pour
-  toutes) — un script qui interroge la première barre 1m disponible par paire et fixe `t0(paire)`.
-  Le panel commun démarre à `max_i t0(i)`.
+- **Prix de barre = le CLOSE** (barre étiquetée par sa fin, frontières de minute UTC) : composition exacte
+  des log-rendements, agrégation emboîtée (close 15m = dernier close 1m de l'intervalle), synchronisation
+  transversale du panel. Pas de VWAP (le « volume » FX EODHD = compte de ticks). Nature du prix (mid/last/bid)
+  vérifiée par la sonde via la cohérence vs close journalier officiel.
+- **Sonde `fx_intraday_probe` — spécification et verdicts pré-enregistrés** (modifiables uniquement AVANT
+  exécution). Mesures par paire × fréquence (1m/15m/1h) × mois-échantillon (2010, 2015, 2020, 2025, post-t0) :
+  couverture (barres présentes / grille 24/5), taux de rassies (close inchangé), check de convention
+  (niveau dans plage plausible pré-écrite), cohérence journalière (|close 1m agrégé jour − close daily
+  officiel|, médiane bps), empreinte week-end. t0 par recherche dichotomique (fenêtres 120 j).
+  Seuils d'éligibilité : 1m → couverture ≥ 95 % et rassies ≤ 30 % ; 15m → ≥ 97 % et ≤ 10 % ;
+  1h → ≥ 98 % et ≤ 5 %. Règles : (1) éligibilité par fréquence sur tous les mois-échantillons post-t0 ;
+  (2) univers d'un run = paires éligibles à la fréquence de base du run (départ 1 min), fréquences
+  supérieures = sensibilité à univers CONSTANT (pas de panel à géométrie variable) ; (3) cohérence
+  journalière médiane ≤ 10 bps sinon investigation ; (4) échec de convention = blocage dur (V17) ;
+  (5) t0 effectif = t0 + 1 mois plein. Budget ~200 requêtes ≈ 1 000 crédits.
+  Livrable : `docs/PROBE_REPORT.md` + données brutes conservées. Le panel commun démarre à `max_i t0(i)`.
 
 ## 1.3 Granularité & historique (répond à V3)
 
