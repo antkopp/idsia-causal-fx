@@ -65,6 +65,18 @@ est une règle d'analyse, pas une structure de données) :
   journalière médiane ≤ 10 bps sinon investigation ; (4) échec de convention = blocage dur (V17) ;
   (5) t0 effectif = t0 + 1 mois plein. Budget ~200 requêtes ≈ 1 000 crédits.
   Livrable : `docs/PROBE_REPORT.md` + données brutes conservées. Le panel commun démarre à `max_i t0(i)`.
+- **Checks additionnels de la sonde** (revue d'exhaustivité du 05/08, preuve par partition en 5 classes —
+  existence/temps/valeur/cohérence/processus) : mois-échantillons **été ET hiver** (artefacts DST) ;
+  unicité + monotonie des horodatages par requête ; **scan d'outliers** (|Δlog| > seuil, sauts ≈ log 10 /
+  log 100 — précédent vécu : glitches ÷100/×100 London IOB) + filtre prix ≤ 0/NaN ; cohérence journalière
+  calculée **par époque** (détecte un changement de nature du prix mi-historique) ; **cross-check
+  d'agrégation** 1m→15m/1h vs barres natives EODHD (post-oct. 2020) ; **test de triangulation** EURJPY coté
+  vs triangulé (une erreur de convention V17 y explose) ; conservation des réponses brutes pour **diff de
+  révision** au backfill.
+- **QC à deux étages (structurel)** : la sonde échantillonne — elle ne peut PAS prouver l'absence de trous
+  ou de glitches mi-historique. La couverture exhaustive = sonde (éligibilité, avant ingestion) ∪ **audit
+  post-backfill** (barre par barre sur tout l'historique : couverture, outliers, unicité, agrégation,
+  diff de révision → alimente `fx_panel_log`). Aucun résultat d'estimation avant l'audit vert.
 
 ## 1.3 Granularité & historique (répond à V3)
 
